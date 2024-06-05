@@ -82,5 +82,12 @@ etios = Auto {
     distanciaRecorrida = 110
 }
 
+civic :: Auto
+civic = Auto {
+    color = "violeta",
+    velocidad = 150,
+    distanciaRecorrida = 890
+}
+
 carrera1 :: Carrera
 carrera1 = [etios, suran]
