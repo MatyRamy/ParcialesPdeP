@@ -90,4 +90,4 @@ civic = Auto {
 }
 
 carrera1 :: Carrera
-carrera1 = [etios, suran]
+carrera1 = [etios, suran, civic]
