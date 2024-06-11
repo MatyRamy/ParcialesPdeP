@@ -74,8 +74,8 @@ type TablaDePosiciones = [(Int, String)]
 simularCarrera :: Carrera -> [Evento] -> TablaDePosiciones
 simularCarrera carrera = armarTabla . llegarAlEstadoFinalDeCarrera carrera
 
-llegarAlEstadoFinalDeCarrera :: Carrera -> [Evento] -> TablaDePosiciones
-llegarAlEstadoFinalDeCarrera carrera [eventos] = foldl (flip($))
+llegarAlEstadoFinalDeCarrera :: Carrera -> [Evento] -> Carrera
+llegarAlEstadoFinalDeCarrera = foldl (flip($))
 
 armarTabla :: Carrera -> TablaDePosiciones
 armarTabla carrera = map (puestosDeCarrera carrera) carrera
@@ -90,7 +90,7 @@ usarPowerUp :: PowerUp -> String -> Evento
 usarPowerUp powerUp color carrera = powerUp (encontrarAutoDeColor color carrera) carrera
 
 encontrarAutoDeColor :: String -> Carrera -> Auto
-encontrarAutoDeColor colorx carrera = head . filter ((==colorx) . color) carrera
+encontrarAutoDeColor colorx = head . filter ((==colorx) . color)
 
 ---------------------------Ejemplos para practica-------------------------------
 
