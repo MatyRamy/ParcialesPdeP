@@ -22,6 +22,9 @@ vaTranquilo auto carrera = all (leGanaYNoLoTieneCerca auto) carrera
 leGanaYNoLoTieneCerca :: Auto -> Auto -> Bool
 leGanaYNoLoTieneCerca auto1 auto2 = leGana auto1 auto2 && not (estaCerca auto1 auto2)
 
+puesto :: Auto -> Carrera -> Int
+puesto auto = (+1) . length . filter (flip leGana auto)
+
 distanciaMenorA10 :: Auto -> Auto -> Bool
 distanciaMenorA10 auto1= (10>) . abs . (distanciaRecorrida auto1-) . distanciaRecorrida
 
@@ -65,29 +68,32 @@ usarJetpack tiempoJetPack =  alterarVelocidad (`div`2) . autoCorreDurante tiempo
 
 ---------------------------Punto 4----------------------------------------------
 
- 
+type Evento = Carrera -> Carrera
+type TablaDePosiciones = [(Int, String)]
+
+simularCarrera :: Carrera -> [Evento] -> TablaDePosiciones
+simularCarrera carrera = armarTabla . llegarAlEstadoFinalDeCarrera carrera
+
+llegarAlEstadoFinalDeCarrera :: Carrera -> [Evento] -> TablaDePosiciones
+llegarAlEstadoFinalDeCarrera carrera [eventos] = foldl (flip($))
+
+armarTabla :: Carrera -> TablaDePosiciones
+armarTabla carrera = map (puestosDeCarrera carrera) carrera
+
+puestosDeCarrera :: Carrera -> Auto -> (Int, String)
+puestosDeCarrera carrera auto = (puesto auto carrera, color auto)
+
+correnTodos :: Int -> Evento 
+correnTodos tiempoQueCorre = map (autoCorreDurante tiempoQueCorre)
+
+usarPowerUp :: PowerUp -> String -> Evento
+usarPowerUp powerUp color carrera = powerUp (encontrarAutoDeColor color carrera) carrera
+
+encontrarAutoDeColor :: String -> Carrera -> Auto
+encontrarAutoDeColor colorx carrera = head . filter ((==colorx) . color) carrera
+
 ---------------------------Ejemplos para practica-------------------------------
 
-suran :: Auto
-suran = Auto {
-    color = "rojo",
-    velocidad = 100,
-    distanciaRecorrida = 119
-}
-
-etios :: Auto
-etios = Auto {
-    color = "azul",
-    velocidad = 130,
-    distanciaRecorrida = 110
-}
-
-civic :: Auto
-civic = Auto {
-    color = "violeta",
-    velocidad = 150,
-    distanciaRecorrida = 890
-}
-
-carrera1 :: Carrera
-carrera1 = [etios, suran, civic]
+ejemplo = simularCarrera [(Auto "rojo" 120 0),(Auto "blanco" 120 0), (Auto "azul" 120 0), (Auto "negro" 120 0)]
+    [correnTodos 30, usarPowerUp (jetPack 3) "azul", usarPowerUp terremoto "blanco", correnTodos 40, 
+    usarPowerUp (miguelitos 20) "blanco", usarPowerUp (jetPack 6) "negro", correnTodos 10]
